@@ -1,27 +1,33 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const apiKey = 'YOUR_API_KEY';
+document.addEventListener('DOMContentLoaded', function () {
+    const apiKey = 'd51a2f8920a694dc7f4b7e797107e605';
+    const weatherInfoDiv = document.getElementById('weatherInfo');
 
-    // Function to get weather data
-    function getWeather(lat, lon) {
-        const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
+    function getWeather(query) {
+        let url;
+        if (typeof query === 'string') {
+            url = `https://api.openweathermap.org/data/2.5/weather?q=${query}&appid=${apiKey}&units=metric`;
+        } else {
+            url = `https://api.openweathermap.org/data/2.5/weather?lat=${query.lat}&lon=${query.lon}&appid=${apiKey}&units=metric`;
+        }
 
         fetch(url)
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) throw new Error('City not found');
+                return response.json();
+            })
             .then(data => {
-                const weatherInfo = `
+                weatherInfoDiv.innerHTML = `
                     <h2>${data.name}</h2>
                     <p>Temperature: ${data.main.temp}°C</p>
                     <p>Weather: ${data.weather[0].description}</p>
                 `;
-                document.getElementById('weatherInfo').innerHTML = weatherInfo;
                 updateBackgroundImage(data.weather[0].main);
             })
             .catch(error => {
-                document.getElementById('weatherInfo').innerHTML = '<p>City not found.</p>';
+                weatherInfoDiv.innerHTML = `<p>${error.message}</p>`;
             });
     }
 
-    // Function to update background image
     function updateBackgroundImage(weather) {
         const weatherBackgrounds = {
             Clear: 'url(clear-sky.jpg)',
@@ -40,41 +46,21 @@ document.addEventListener('DOMContentLoaded', function() {
             Squall: 'url(squall.jpg)',
             Tornado: 'url(tornado.jpg)'
         };
-        
         document.body.style.backgroundImage = weatherBackgrounds[weather] || 'url(default.jpg)';
     }
 
-    // Get current location and weather
     navigator.geolocation.getCurrentPosition(
-        position => {
-            const lat = position.coords.latitude;
-            const lon = position.coords.longitude;
-            getWeather(lat, lon);
-        },
-        error => {
-            document.getElementById('weatherInfo').innerHTML = '<p>Unable to get location.</p>';
-        }
+        position => getWeather({ lat: position.coords.latitude, lon: position.coords.longitude }),
+        error => (weatherInfoDiv.innerHTML = '<p>Unable to get location.</p>')
     );
 
-    // Search weather by city
-    document.getElementById('searchButton').addEventListener('click', function() {
-        const city = document.getElementById('cityInput').value;
-        const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
-
-        fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                const weatherInfo = `
-                    <h2>${data.name}</h2>
-                    <p>Temperature: ${data.main.temp}°C</p>
-                    <p>Weather: ${data.weather[0].description}</p>
-                `;
-                document.getElementById('weatherInfo').innerHTML = weatherInfo;
-                updateBackgroundImage(data.weather[0].main);
-            })
-            .catch(error => {
-                document.getElementById('weatherInfo').innerHTML = '<p>City not found.</p>';
-            });
+    document.getElementById('searchButton').addEventListener('click', function () {
+        const city = document.getElementById('cityInput').value.trim();
+        if (city) {
+            getWeather(city);
+        } else {
+            weatherInfoDiv.innerHTML = '<p>Please enter a city.</p>';
+        }
     });
 });
 
