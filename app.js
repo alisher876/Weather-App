@@ -16,16 +16,35 @@ document.addEventListener('DOMContentLoaded', function () {
                 return response.json();
             })
             .then(data => {
+                const { name, main, wind, sys, weather } = data;
+
+                // Convert sunrise & sunset times to 12-hour format (AM/PM)
+                const sunriseTime = formatTime(sys.sunrise);
+                const sunsetTime = formatTime(sys.sunset);
+
                 weatherInfoDiv.innerHTML = `
-                    <h2>${data.name}</h2>
-                    <p>Temperature: ${data.main.temp}°C</p>
-                    <p>Weather: ${data.weather[0].description}</p>
+                    <h2>${name}</h2>
+                    <p><strong>Temperature:</strong> ${main.temp}°C</p>
+                    <p><strong>Humidity:</strong> ${main.humidity}%</p>
+                    <p><strong>Wind Speed:</strong> ${wind.speed} m/s</p>
+                    <p><strong>Sunrise:</strong> ${sunriseTime}</p>
+                    <p><strong>Sunset:</strong> ${sunsetTime}</p>
+                    <p><strong>Weather:</strong> ${weather[0].description}</p>
                 `;
-                updateBackgroundImage(data.weather[0].main);
+                updateBackgroundImage(weather[0].main);
             })
             .catch(error => {
                 weatherInfoDiv.innerHTML = `<p>${error.message}</p>`;
             });
+    }
+
+    function formatTime(unixTimestamp) {
+        const date = new Date(unixTimestamp * 1000);
+        let hours = date.getHours();
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12 || 12; // Convert 0 to 12
+        return `${hours}:${minutes} ${ampm}`;
     }
 
     function updateBackgroundImage(weather) {
@@ -51,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     navigator.geolocation.getCurrentPosition(
         position => getWeather({ lat: position.coords.latitude, lon: position.coords.longitude }),
-        error => (weatherInfoDiv.innerHTML = '<p>Unable to get location.</p>')
+        error => (weatherInfoDiv.innerHTML = '<p>Unable to get location. Please enter a city manually.</p>')
     );
 
     document.getElementById('searchButton').addEventListener('click', function () {
