@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     
 
-    function getHourlyForecast(coord) {
+   function getHourlyForecast(coord) {
         const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${coord.lat}&lon=${coord.lon}&exclude=current,minutely,daily,alerts&appid=${apiKey}&units=metric`;
     
         fetch(url)
@@ -61,13 +61,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 let forecastHTML = `<h3>Today's Hourly Forecast</h3>`;
                 forecastHTML += `<div style="display: flex; justify-content: center; gap: 10px; overflow-x: auto;">`;
     
-                // Get only 6 time slots (next 12 hours, every 2 hours)
                 for (let i = 0; i < 12; i += 2) {
                     const hourData = data.hourly[i];
                     const time = new Date(hourData.dt * 1000).toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+                    const icon = `https://openweathermap.org/img/wn/${hourData.weather[0].icon}.png`;
+    
                     forecastHTML += `
                         <div class="forecast-box">
                             <p><strong>${time}</strong></p>
+                            <img src="${icon}" alt="${hourData.weather[0].description}">
                             <p>${hourData.temp.toFixed(1)}°C</p>
                             <p>${hourData.weather[0].description}</p>
                         </div>
@@ -75,12 +77,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
     
                 forecastHTML += `</div>`;
-                document.getElementById('hourlyForecast').innerHTML = forecastHTML;
+                hourlyForecastDiv.innerHTML = forecastHTML;
             })
             .catch(error => {
-                document.getElementById('hourlyForecast').innerHTML = `<p>${error.message}</p>`;
+                hourlyForecastDiv.innerHTML = `<p>${error.message}</p>`;
             });
     }
+    
     
 
     function getDailyForecast(coord) {
@@ -97,9 +100,12 @@ document.addEventListener('DOMContentLoaded', function () {
     
                 data.daily.forEach((day, index) => {
                     const date = new Date(day.dt * 1000).toLocaleDateString(undefined, { weekday: 'short' });
+                    const icon = `https://openweathermap.org/img/wn/${day.weather[0].icon}.png`;
+    
                     forecastHTML += `
                         <div class="forecast-box">
                             <p><strong>${date}</strong></p>
+                            <img src="${icon}" alt="${day.weather[0].description}">
                             <p>${day.temp.day.toFixed(1)}°C</p>
                             <p>${day.weather[0].description}</p>
                         </div>
