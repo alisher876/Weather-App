@@ -19,21 +19,27 @@ document.addEventListener('DOMContentLoaded', function () {
                 return response.json();
             })
             .then(data => {
-                const { name, main, wind, sys, weather, coord } = data;
-                const sunriseTime = formatTime(sys.sunrise);
-                const sunsetTime = formatTime(sys.sunset);
-
+                const { name, main, wind, sys, weather, coord, timezone } = data;
+                const sunriseTime = sys.sunrise;
+                const sunsetTime = sys.sunset;
+            
+                // Debugging Logs
+                console.log("City:", name);
+                console.log("Sunrise (UTC):", sunriseTime);
+                console.log("Sunset (UTC):", sunsetTime);
+                console.log("Timezone Offset (seconds):", timezone);
+            
                 currentWeatherDiv.innerHTML = `
                     <h2>${name}</h2>
                     <p><strong>Temperature:</strong> ${main.temp}°C</p>
                     <p><strong>Humidity:</strong> ${main.humidity}%</p>
                     <p><strong>Wind Speed:</strong> ${wind.speed} m/s</p>
-                    <p><strong>Sunrise:</strong> ${sunriseTime}</p>
-                    <p><strong>Sunset:</strong> ${sunsetTime}</p>
+                    <p><strong>Sunrise:</strong> ${formatTime(sunriseTime)}</p>
+                    <p><strong>Sunset:</strong> ${formatTime(sunsetTime)}</p>
                     <p><strong>Weather:</strong> ${weather[0].description}</p>
                 `;
-
-                updateBackgroundImage(weather[0].main);
+            
+                updateBackgroundImage(sunriseTime, sunsetTime, timezone);
                 getHourlyForecast(coord);
                 getDailyForecast(coord);
             })
@@ -109,27 +115,31 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     
 
-    function updateBackgroundImage(weather) {
-        const weatherBackgrounds = {
-            Clear: 'clear-sky.jpg',
-            Clouds: 'cloudy.jpg',
-            Rain: 'rainy.jpg',
-            Snow: 'snowy.jpg',
-            Drizzle: 'drizzle.jpg',
-            Thunderstorm: 'thunderstorm.jpg',
-            Mist: 'mist.jpg',
-            Smoke: 'smoke.jpg',
-            Haze: 'haze.jpg',
-            Fog: 'fog.jpg',
-            Sand: 'sand.jpg',
-            Dust: 'dust.jpg',
-            Ash: 'ash.jpg',
-            Squall: 'squall.jpg',
-            Tornado: 'tornado.jpg'
-        };
+    function updateBackgroundImage(sunrise, sunset, timezoneOffset) {
+        const nowUTC = Math.floor(Date.now() / 1000); // ✅ Get current time in UTC
+        const localTime = nowUTC + timezoneOffset; // ✅ Convert to local time
     
-        const imageUrl = weatherBackgrounds[weather] || 'default.jpg'; // Fallback to 'default.jpg'
-        document.body.style.backgroundImage = `url('${imageUrl}')`;
+        console.log("Current UTC Time:", nowUTC);
+        console.log("Local Time (Searched City):", localTime);
+        console.log("Sunrise (Local):", sunrise);
+        console.log("Sunset (Local):", sunset);
+    
+        let backgroundImage;
+    
+        if (localTime >= sunrise && localTime <= sunset) {
+            backgroundImage = "day.jpg"; // ✅ Correct: Show day during daytime
+        } else if (localTime >= (sunset - 1800) && localTime <= (sunset + 1800)) {
+            backgroundImage = "sunset.jpg"; // ✅ Correct: Sunset time
+        } else if (localTime >= (sunrise - 1800) && localTime <= (sunrise + 1800)) {
+            backgroundImage = "sunrise.jpg"; // ✅ Correct: Sunrise time
+        } else {
+            backgroundImage = "night.jpg"; // ✅ Correct: Nighttime
+        }
+    
+        console.log("Selected Background Image:", backgroundImage);
+    
+        // ✅ Update background image
+        document.body.style.backgroundImage = `url('./images/${backgroundImage}?v=${Date.now()}')`;
         document.body.style.backgroundSize = "cover";
         document.body.style.backgroundPosition = "center";
         document.body.style.backgroundRepeat = "no-repeat";
