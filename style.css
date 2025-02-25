@@ -9,7 +9,7 @@ body {
     animation: fadeIn 2s ease-in-out;
 }
 
-
+/* Fade-in animation for body */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -42,7 +42,7 @@ body {
     animation: slideIn 1s forwards ease-in-out;
 }
 
-
+/* Slide-in animation for cards */
 @keyframes slideIn {
     to {
         transform: translateY(0);
@@ -103,7 +103,7 @@ button:hover {
     margin-top: 20px;
 }
 
-
+/* Daily Forecast Styling  - Next 8 Days*/
 .forecast-container {
     display: flex;
     justify-content: center;
@@ -128,7 +128,7 @@ button:hover {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-
+/* Hover animation for forecast cards */
 .forecast-box:hover {
     transform: scale(1.1);
     box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
