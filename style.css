@@ -6,16 +6,18 @@ body {
     width: 100vw;
     margin: 0;
     padding: 0;
+    overflow-x: hidden;
 }
-
 
 .top-container {
     display: flex;
     justify-content: space-between;
-    align-items: top;
-    padding: 20px;
-    width: 100%;
+    align-items: flex-start;
+    padding: 15px;
+    width: 90%;
+    margin: 0 auto;
     box-sizing: border-box;
+    gap: 10px; 
 }
 
 .weather-box {
@@ -25,17 +27,23 @@ body {
     border-radius: 10px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     text-align: center;
-    min-height: 150px;
-    margin: 10px;
+    min-height: 100px;
+    margin: 5px;
 }
 
 #currentWeather {
+    flex: 0.5; 
+    min-width: 200px;
+    max-width: 300px; 
     text-align: left;
 }
 
 #hourlyForecast {
+    flex: 4;
+    max-width: 600px;
     text-align: center;
 }
+
 
 .search-box {
     display: flex;
@@ -73,16 +81,23 @@ button:hover {
     margin-top: 20px;
 }
 
-/* Daily Forecast Styling */
+
 .forecast-container {
     display: flex;
-    justify-content: center;
+    justify-content: center; 
     flex-wrap: wrap;
     background: rgba(255, 255, 255, 0.38);
-    gap: 15px;
+    gap: 10px;
     padding: 20px;
     margin-top: 20px;
+    width: 90%;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    border-radius: 10px;
 }
+
 
 .forecast-box {
     background: rgba(255, 255, 255, 0.592);
@@ -90,9 +105,29 @@ button:hover {
     border-radius: 10px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     text-align: center;
-    width: 120px;
+    width: 110px; 
+    border-radius: 10px;
 }
 
 
+.hourly-forecast-container {
+    display: flex;
+    gap: 5px; 
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 8px;
+    scroll-behavior: smooth;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    max-width: 100%;
+}
 
 
+.hourly-card {
+    background: rgba(255, 255, 255, 0.4);
+    padding: 10px;
+    border-radius: 10px;
+    min-width: 200px;
+    text-align: center;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
