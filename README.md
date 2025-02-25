@@ -37,14 +37,11 @@ This app requires an API key from [OpenWeatherMap](https://openweathermap.org/ap
 3. Replace `'Your_API_Key'` with your actual API key.
 
 ## Known Issues & Improvements
-- **Incorrect Background Timing:** The app sometimes selects the wrong background image for a given time. Needs further debugging.
-- **UI Adjustments:** The "Next 8 Days Forecast" section should be aligned better.
-- **Search Box Sizing:** The search box takes more space than intended and should be resized.
-- **Font Visibility:** Night mode makes fonts less visible; add dynamic text color adjustment.
+- The currentWeather section takes more space than expected.
+- The Next 8 Days Forecast title is misaligned
+- UI responsiveness needs further optimization.
+
 
 ## Contributions
 Feel free to fork this repository and submit pull requests with improvements!
-
-## License
-This project is licensed under the MIT License.
 
