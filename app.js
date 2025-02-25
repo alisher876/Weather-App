@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const apiKey = 'd51a2f8920a694dc7f4b7e797107e605';
+    const apiKey = 'Your_API_Key';
     const weatherInfoDiv = document.getElementById('weatherInfo');
     const currentWeatherDiv = document.getElementById('currentWeather');
     const hourlyForecastDiv = document.getElementById('hourlyForecast');
