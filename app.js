@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const apiKey = 'Your_API_Key';
+    const apiKey = 'd51a2f8920a694dc7f4b7e797107e605';
     const weatherInfoDiv = document.getElementById('weatherInfo');
     const currentWeatherDiv = document.getElementById('currentWeather');
     const hourlyForecastDiv = document.getElementById('hourlyForecast');
@@ -23,21 +23,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 const sunriseTime = sys.sunrise;
                 const sunsetTime = sys.sunset;
             
-                // Debugging Logs
-                console.log("City:", name);
-                console.log("Sunrise (UTC):", sunriseTime);
-                console.log("Sunset (UTC):", sunsetTime);
-                console.log("Timezone Offset (seconds):", timezone);
             
                 currentWeatherDiv.innerHTML = `
-                    <h2>${name}</h2>
-                    <p><strong>Temperature:</strong> ${main.temp}°C</p>
-                    <p><strong>Humidity:</strong> ${main.humidity}%</p>
-                    <p><strong>Wind Speed:</strong> ${wind.speed} m/s</p>
-                    <p><strong>Sunrise:</strong> ${formatTime(sunriseTime)}</p>
-                    <p><strong>Sunset:</strong> ${formatTime(sunsetTime)}</p>
-                    <p><strong>Weather:</strong> ${weather[0].description}</p>
-                `;
+    <h2>${name}</h2>
+    <p><strong>Temperature:</strong> ${main.temp}°C</p>
+    <p><strong>Humidity:</strong> ${main.humidity}%</p>
+    <p><strong>Wind Speed:</strong> ${wind.speed} m/s</p>
+    <p><strong>Sunrise:</strong> ${formatTime(sunriseTime, timezone)}</p>
+    <p><strong>Sunset:</strong> ${formatTime(sunsetTime, timezone)}</p>
+    <p><strong>Weather:</strong> ${weather[0].description}</p>
+`;
+
             
                 updateBackgroundImage(sunriseTime, sunsetTime, timezone);
                 getHourlyForecast(coord);
@@ -49,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     
 
-   function getHourlyForecast(coord) {
+    function getHourlyForecast(coord) {
         const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${coord.lat}&lon=${coord.lon}&exclude=current,minutely,daily,alerts&appid=${apiKey}&units=metric`;
     
         fetch(url)
@@ -59,11 +55,18 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .then(data => {
                 let forecastHTML = `<h3>Today's Hourly Forecast</h3>`;
-                forecastHTML += `<div style="display: flex; justify-content: center; gap: 10px; overflow-x: auto;">`;
+                forecastHTML += `<div class="hourly-forecast-container">`;
     
-                for (let i = 0; i < 12; i += 2) {
+                const totalHours = 24;
+                const interval = Math.floor(totalHours / 12);
+    
+                for (let i = 0; i < totalHours; i += interval) {
                     const hourData = data.hourly[i];
-                    const time = new Date(hourData.dt * 1000).toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+                    const time = new Date(hourData.dt * 1000).toLocaleTimeString(undefined, {
+                        hour: 'numeric',
+                        minute: '2-digit',
+                        hour12: true
+                    });
                     const icon = `https://openweathermap.org/img/wn/${hourData.weather[0].icon}.png`;
     
                     forecastHTML += `
@@ -83,6 +86,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 hourlyForecastDiv.innerHTML = `<p>${error.message}</p>`;
             });
     }
+    
     
     
 
@@ -122,45 +126,45 @@ document.addEventListener('DOMContentLoaded', function () {
     
 
     function updateBackgroundImage(sunrise, sunset, timezoneOffset) {
-        const nowUTC = Math.floor(Date.now() / 1000); // Get current time in UTC
-        const localTime = nowUTC + timezoneOffset; // Convert to local time
-    
-        console.log("Current UTC Time:", nowUTC);
-        console.log("Local Time (Searched City):", localTime);
-        console.log("Sunrise (Local):", sunrise);
-        console.log("Sunset (Local):", sunset);
+        const nowUTC = Math.floor(Date.now() / 1000);
+        const localTime = nowUTC + timezoneOffset;
     
         let backgroundImage;
-    
-        if (localTime >= sunrise && localTime <= sunset) {
-            backgroundImage = "day.jpg"; // Show day during daytime
-        } else if (localTime >= (sunset - 1800) && localTime <= (sunset + 1800)) {
-            backgroundImage = "sunset.jpg"; // Sunset time
-        } else if (localTime >= (sunrise - 1800) && localTime <= (sunrise + 1800)) {
-            backgroundImage = "sunrise.jpg"; // Sunrise time
+        if (localTime >= sunrise + timezoneOffset && localTime <= sunset + timezoneOffset) {
+            backgroundImage = "day.jpg";
+        } else if (localTime >= (sunset + timezoneOffset - 1800) && localTime <= (sunset + timezoneOffset + 1800)) {
+            backgroundImage = "sunset.jpg";
+        } else if (localTime >= (sunrise + timezoneOffset - 1800) && localTime <= (sunrise + timezoneOffset + 1800)) {
+            backgroundImage = "sunrise.jpg";
         } else {
-            backgroundImage = "night.jpg"; // Nighttime
+            backgroundImage = "night.jpg";
         }
     
         console.log("Selected Background Image:", backgroundImage);
-    
-        // Update background image
         document.body.style.backgroundImage = `url('./images/${backgroundImage}?v=${Date.now()}')`;
-        document.body.style.backgroundSize = "cover";
-        document.body.style.backgroundPosition = "center";
-        document.body.style.backgroundRepeat = "no-repeat";
     }
+    
     
     
 
-    function formatTime(unixTimestamp) {
-        const date = new Date(unixTimestamp * 1000);
-        let hours = date.getHours();
-        const minutes = date.getMinutes().toString().padStart(2, '0');
-        const ampm = hours >= 12 ? 'PM' : 'AM';
-        hours = hours % 12 || 12; 
-        return `${hours}:${minutes} ${ampm}`;
+    function formatTime(unixTimestamp, timezoneOffset) {
+        if (!unixTimestamp || !timezoneOffset) {
+            console.error("Invalid timestamp or timezone offset:", unixTimestamp, timezoneOffset);
+            return "N/A";
+        }
+    
+        const localTimestamp = (unixTimestamp + timezoneOffset);
+        const date = new Date(localTimestamp * 1000);
+    
+        return new Intl.DateTimeFormat('en-US', {
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true,
+            timeZone: 'UTC'
+        }).format(date);
     }
+    
+    
 
     navigator.geolocation.getCurrentPosition(
         position => getWeather({ lat: position.coords.latitude, lon: position.coords.longitude }),
@@ -176,4 +180,5 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
 
