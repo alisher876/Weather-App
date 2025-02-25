@@ -6,16 +6,26 @@ body {
     width: 100vw;
     margin: 0;
     padding: 0;
+    animation: fadeIn 2s ease-in-out;
 }
 
+/* Fade-in animation for body */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
 
 .top-container {
     display: flex;
     justify-content: space-between;
-    align-items: top;
+    align-items: flex-start;
     padding: 20px;
     width: 100%;
-    box-sizing: border-box;
+    box-sizing:border-box;
 }
 
 .weather-box {
@@ -27,6 +37,17 @@ body {
     text-align: center;
     min-height: 150px;
     margin: 10px;
+    transform: translateY(20px);
+    opacity: 0;
+    animation: slideIn 1s forwards ease-in-out;
+}
+
+/* Slide-in animation for cards */
+@keyframes slideIn {
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 #currentWeather {
@@ -44,7 +65,13 @@ body {
     background: rgba(255, 255, 255, 0.38);
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 4px 6px rgba(9, 121, 161, 0.804);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.search-box:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 6px 12px rgba(9, 121, 161, 1);
 }
 
 input {
@@ -53,19 +80,26 @@ input {
     border-radius: 6px;
     margin-bottom: 10px;
     width: 150px;
+    transition: box-shadow 0.3s ease;
+}
+
+input:focus {
+    box-shadow: 0px 0px 10px rgba(9, 121, 161, 0.8);
 }
 
 button {
-    padding: 10px 20px;
+    padding: 10px 25px;
     background-color: #ffa600b5;
     color: rgb(255, 255, 255);
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 button:hover {
     background-color: #0057b386;
+    transform: translateY(-3px);
 }
 
 .main-weather {
@@ -73,15 +107,18 @@ button:hover {
     margin-top: 20px;
 }
 
-/* Daily Forecast Styling */
+/* Daily Forecast Styling  - Next 8 Days*/
 .forecast-container {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
     background: rgba(255, 255, 255, 0.38);
     gap: 15px;
+    width: 1000px;
     padding: 20px;
     margin-top: 20px;
+    margin-left: 200px;
+    border-radius: 10px;
 }
 
 .forecast-box {
@@ -91,4 +128,12 @@ button:hover {
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     text-align: center;
     width: 120px;
+    transform: scale(1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover animation for forecast cards */
+.forecast-box:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
 }
