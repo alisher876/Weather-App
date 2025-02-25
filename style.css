@@ -9,7 +9,7 @@ body {
     animation: fadeIn 2s ease-in-out;
 }
 
-/* Fade-in animation for body */
+
 @keyframes fadeIn {
     from {
         opacity: 0;
