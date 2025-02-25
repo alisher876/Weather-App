@@ -18,11 +18,11 @@ This is a simple Weather App that allows users to search for a city and get real
 ## Installation
 1. Clone the repository:
    ```sh
-   git clone https://github.com/your-username/weather-app.git
+   [git clone https://github.com/your-username/weather-app.git](https://github.com/alisher876/Weather-App.git)
    ```
 2. Navigate to the project directory:
    ```sh
-   cd weather-app
+   Weather-App
    ```
 3. Open `index.html` in a browser or use Live Server in VS Code.
 
