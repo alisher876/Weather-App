@@ -22,19 +22,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 const { name, main, wind, sys, weather, coord, timezone } = data;
                 const sunriseTime = sys.sunrise;
                 const sunsetTime = sys.sunset;
-            
-            
-                currentWeatherDiv.innerHTML = `
-    <h2>${name}</h2>
-    <p><strong>Temperature:</strong> ${main.temp}°C</p>
-    <p><strong>Humidity:</strong> ${main.humidity}%</p>
-    <p><strong>Wind Speed:</strong> ${wind.speed} m/s</p>
-    <p><strong>Sunrise:</strong> ${formatTime(sunriseTime, timezone)}</p>
-    <p><strong>Sunset:</strong> ${formatTime(sunsetTime, timezone)}</p>
-    <p><strong>Weather:</strong> ${weather[0].description}</p>
-`;
 
-            
+                
+
+                currentWeatherDiv.innerHTML = `
+                    <h2>${name}</h2>
+                    <p><strong>Temperature:</strong> ${main.temp}°C</p>
+                    <p><strong>Humidity:</strong> ${main.humidity}%</p>
+                    <p><strong>Wind Speed:</strong> ${wind.speed} m/s</p>
+                    <p><strong>Sunrise:</strong> ${formatTime(sunriseTime)}</p>
+                    <p><strong>Sunset:</strong> ${formatTime(sunsetTime)}</p>
+                    <p><strong>Weather:</strong> ${weather[0].description}</p>
+                `;
+
                 updateBackgroundImage(sunriseTime, sunsetTime, timezone);
                 getHourlyForecast(coord);
                 getDailyForecast(coord);
@@ -43,11 +43,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 weatherInfoDiv.innerHTML = `<p>${error.message}</p>`;
             });
     }
-    
 
-    function getHourlyForecast(coord) {
+
+   function getHourlyForecast(coord) {
         const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${coord.lat}&lon=${coord.lon}&exclude=current,minutely,daily,alerts&appid=${apiKey}&units=metric`;
-    
+
         fetch(url)
             .then(response => {
                 if (!response.ok) throw new Error('Unable to fetch hourly forecast');
@@ -55,20 +55,13 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .then(data => {
                 let forecastHTML = `<h3>Today's Hourly Forecast</h3>`;
-                forecastHTML += `<div class="hourly-forecast-container">`;
-    
-                const totalHours = 24;
-                const interval = Math.floor(totalHours / 12);
-    
-                for (let i = 0; i < totalHours; i += interval) {
+                forecastHTML += `<div style="display: flex; justify-content: center; gap: 10px; overflow-x: auto;">`;
+
+                for (let i = 0; i < 12; i += 2) {
                     const hourData = data.hourly[i];
-                    const time = new Date(hourData.dt * 1000).toLocaleTimeString(undefined, {
-                        hour: 'numeric',
-                        minute: '2-digit',
-                        hour12: true
-                    });
+                    const time = new Date(hourData.dt * 1000).toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
                     const icon = `https://openweathermap.org/img/wn/${hourData.weather[0].icon}.png`;
-    
+
                     forecastHTML += `
                         <div class="forecast-box">
                             <p><strong>${time}</strong></p>
@@ -78,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         </div>
                     `;
                 }
-    
+
                 forecastHTML += `</div>`;
                 hourlyForecastDiv.innerHTML = forecastHTML;
             })
@@ -86,13 +79,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 hourlyForecastDiv.innerHTML = `<p>${error.message}</p>`;
             });
     }
-    
-    
-    
+
+
 
     function getDailyForecast(coord) {
         const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${coord.lat}&lon=${coord.lon}&exclude=current,minutely,hourly,alerts&appid=${apiKey}&units=metric`;
-    
+
         fetch(url)
             .then(response => {
                 if (!response.ok) throw new Error('Unable to fetch daily forecast');
@@ -101,11 +93,11 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 let forecastHTML = `<h3>Next 8 Days Forecast</h3>`;
                 forecastHTML += `<div style="display: flex; justify-content: center; gap: 10px; overflow-x: auto;">`;
-    
+
                 data.daily.forEach((day, index) => {
                     const date = new Date(day.dt * 1000).toLocaleDateString(undefined, { weekday: 'short' });
                     const icon = `https://openweathermap.org/img/wn/${day.weather[0].icon}.png`;
-    
+
                     forecastHTML += `
                         <div class="forecast-box">
                             <p><strong>${date}</strong></p>
@@ -115,7 +107,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         </div>
                     `;
                 });
-    
+
                 forecastHTML += `</div>`;
                 dailyForecastDiv.innerHTML = forecastHTML;
             })
@@ -123,7 +115,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 dailyForecastDiv.innerHTML = `<p>${error.message}</p>`;
             });
     }
-    
+
 
     function updateBackgroundImage(sunrise, sunset, timezoneOffset) {
         const nowUTC = Math.floor(Date.now() / 1000);
@@ -143,28 +135,17 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log("Selected Background Image:", backgroundImage);
         document.body.style.backgroundImage = `url('./images/${backgroundImage}?v=${Date.now()}')`;
     }
-    
-    
-    
 
-    function formatTime(unixTimestamp, timezoneOffset) {
-        if (!unixTimestamp || !timezoneOffset) {
-            console.error("Invalid timestamp or timezone offset:", unixTimestamp, timezoneOffset);
-            return "N/A";
-        }
-    
-        const localTimestamp = (unixTimestamp + timezoneOffset);
-        const date = new Date(localTimestamp * 1000);
-    
-        return new Intl.DateTimeFormat('en-US', {
-            hour: 'numeric',
-            minute: '2-digit',
-            hour12: true,
-            timeZone: 'UTC'
-        }).format(date);
+
+
+    function formatTime(unixTimestamp) {
+        const date = new Date(unixTimestamp * 1000);
+        let hours = date.getHours();
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12 || 12;
+        return `${hours}:${minutes} ${ampm}`;
     }
-    
-    
 
     navigator.geolocation.getCurrentPosition(
         position => getWeather({ lat: position.coords.latitude, lon: position.coords.longitude }),
@@ -175,10 +156,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const city = document.getElementById('cityInput').value.trim();
         if (city) {
             getWeather(city);
+            cityInput.value = '';
         } else {
             weatherInfoDiv.innerHTML = '<p>Please enter a city.</p>';
         }
     });
 });
-
-
