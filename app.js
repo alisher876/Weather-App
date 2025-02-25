@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const apiKey = 'API_KEY';
+    const apiKey = 'd51a2f8920a694dc7f4b7e797107e605';
     const weatherInfoDiv = document.getElementById('weatherInfo');
     const currentWeatherDiv = document.getElementById('currentWeather');
     const hourlyForecastDiv = document.getElementById('hourlyForecast');
@@ -69,8 +69,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     forecastHTML += `
                         <div class="forecast-box">
                             <p><strong>${time}</strong></p>
-                            <img src="${icon}" alt="${hourData.weather[0].description}">
                             <p>${hourData.temp.toFixed(1)}°C</p>
+                            <img src="${icon}" alt="${hourData.weather[0].description}">
                             <p>${hourData.weather[0].description}</p>
                         </div>
                     `;
@@ -105,8 +105,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     forecastHTML += `
                         <div class="forecast-box">
                             <p><strong>${date}</strong></p>
-                            <img src="${icon}" alt="${day.weather[0].description}">
                             <p>${day.temp.day.toFixed(1)}°C</p>
+                            <img src="${icon}" alt="${day.weather[0].description}">
                             <p>${day.weather[0].description}</p>
                         </div>
                     `;
@@ -122,8 +122,8 @@ document.addEventListener('DOMContentLoaded', function () {
     
 
     function updateBackgroundImage(sunrise, sunset, timezoneOffset) {
-        const nowUTC = Math.floor(Date.now() / 1000); // ✅ Get current time in UTC
-        const localTime = nowUTC + timezoneOffset; // ✅ Convert to local time
+        const nowUTC = Math.floor(Date.now() / 1000); // Get current time in UTC
+        const localTime = nowUTC + timezoneOffset; // Convert to local time
     
         console.log("Current UTC Time:", nowUTC);
         console.log("Local Time (Searched City):", localTime);
@@ -133,23 +133,24 @@ document.addEventListener('DOMContentLoaded', function () {
         let backgroundImage;
     
         if (localTime >= sunrise && localTime <= sunset) {
-            backgroundImage = "day.jpg"; // ✅ Correct: Show day during daytime
+            backgroundImage = "day.jpg"; // Show day during daytime
         } else if (localTime >= (sunset - 1800) && localTime <= (sunset + 1800)) {
-            backgroundImage = "sunset.jpg"; // ✅ Correct: Sunset time
+            backgroundImage = "sunset.jpg"; // Sunset time
         } else if (localTime >= (sunrise - 1800) && localTime <= (sunrise + 1800)) {
-            backgroundImage = "sunrise.jpg"; // ✅ Correct: Sunrise time
+            backgroundImage = "sunrise.jpg"; // Sunrise time
         } else {
-            backgroundImage = "night.jpg"; // ✅ Correct: Nighttime
+            backgroundImage = "night.jpg"; // Nighttime
         }
     
         console.log("Selected Background Image:", backgroundImage);
     
-        // ✅ Update background image
+        // Update background image
         document.body.style.backgroundImage = `url('./images/${backgroundImage}?v=${Date.now()}')`;
         document.body.style.backgroundSize = "cover";
         document.body.style.backgroundPosition = "center";
         document.body.style.backgroundRepeat = "no-repeat";
     }
+    
     
 
     function formatTime(unixTimestamp) {
@@ -175,3 +176,4 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
