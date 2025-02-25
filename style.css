@@ -12,7 +12,7 @@ body {
 .top-container {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: top;
     padding: 20px;
     width: 100%;
     box-sizing: border-box;
@@ -20,7 +20,7 @@ body {
 
 .weather-box {
     flex: 1;
-    background: rgba(255, 255, 255, 0);
+    background: rgba(255, 255, 255, 0.38);
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
@@ -41,7 +41,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: rgba(255, 255, 255, 0);
+    background: rgba(255, 255, 255, 0.38);
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
@@ -65,7 +65,7 @@ button {
 }
 
 button:hover {
-    background-color: #0057b300;
+    background-color: #0057b386;
 }
 
 .main-weather {
@@ -78,19 +78,21 @@ button:hover {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+    background: rgba(255, 255, 255, 0.38);
     gap: 15px;
     padding: 20px;
     margin-top: 20px;
 }
 
 .forecast-box {
-    background: rgba(255, 255, 255, 0);
-    padding: 15px;
+    background: rgba(255, 255, 255, 0.592);
+    padding: 10px;
     border-radius: 10px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     text-align: center;
     width: 120px;
 }
+
 
 
 
