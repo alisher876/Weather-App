@@ -40,6 +40,7 @@ This app requires an API key from [OpenWeatherMap](https://openweathermap.org/ap
 - The currentWeather section takes more space than expected.
 - The Next 8 Days Forecast title is misaligned
 - UI responsiveness needs further optimization.
+- Integrate a background image based on weather conditions.
 
 
 ## Contributions
