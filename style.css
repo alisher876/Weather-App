@@ -2,7 +2,7 @@ body {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    height: 100vh;
+    height:100vh;
     width: 100vw;
     margin: 0;
     padding: 0;
@@ -62,34 +62,30 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: rgba(255, 255, 255, 0.38);
+    background: rgba(255, 255, 255, 0.435);
     padding: 20px;
+    height: 280px;
     border-radius: 10px;
-    box-shadow: 0px 4px 6px rgba(9, 121, 161, 0.804);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+
 }
 
-.search-box:hover {
-    transform: scale(1.05);
-    box-shadow: 0px 6px 12px rgba(9, 121, 161, 1);
-}
+
 
 input {
     padding: 10px;
-    border: 1px solid #cccccc00;
+    border: 1px solid #cccccc02;
     border-radius: 6px;
     margin-bottom: 10px;
     width: 150px;
     transition: box-shadow 0.3s ease;
 }
 
-input:focus {
-    box-shadow: 0px 0px 10px rgba(9, 121, 161, 0.8);
-}
+
 
 button {
     padding: 10px 25px;
-    background-color: #ffa600b5;
+    background-color: #115852;
     color: rgb(255, 255, 255);
     border: none;
     border-radius: 4px;
@@ -98,7 +94,7 @@ button {
 }
 
 button:hover {
-    background-color: #0057b386;
+    background-color: #59db64;
     transform: translateY(-3px);
 }
 
@@ -112,17 +108,17 @@ button:hover {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    background: rgba(255, 255, 255, 0.38);
+    background: rgba(202, 194, 194, 0.471);
     gap: 15px;
-    width: 1000px;
+    width: 1200px;
     padding: 20px;
     margin-top: 20px;
-    margin-left: 200px;
+    margin-left: 100px;
     border-radius: 10px;
 }
 
 .forecast-box {
-    background: rgba(255, 255, 255, 0.592);
+    background: rgba(245, 248, 244, 0.671);
     padding: 10px;
     border-radius: 10px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
@@ -135,5 +131,5 @@ button:hover {
 /* Hover animation for forecast cards */
 .forecast-box:hover {
     transform: scale(1.1);
-    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
 }
